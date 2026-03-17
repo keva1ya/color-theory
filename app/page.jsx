@@ -1,10 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-/* ─────────────────────────────────────────────────────────────────
-   COLOR THEORY — Interactive Learning Experience
-   Deploy: add to pages/index.jsx or app/page.jsx in a Next.js project
-   Or use as App.jsx in a Vite React project
-   ───────────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────────────────────────────── */
 
 // ══════════════════════════════════════════════════════════════════
 // UTILITIES
@@ -990,6 +986,13 @@ const CHAPTER_COMPONENTS = {
 export default function App() {
   const [chapter, setChapter] = useState("wheel");
   const [light, setLight] = useState(false);
+  const [showTop, setShowTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 320);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const el = document.createElement("style");
@@ -1006,35 +1009,6 @@ export default function App() {
 
   return (
     <div className={light ? "lm" : ""} style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--tx)", transition: "background .2s,color .2s" }}>
-
-      {/* ── STICKY NAV ── */}
-      <nav style={{ position: "sticky", top: 0, zIndex: 200, borderBottom: "1px solid var(--bd)", background: "var(--bg)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", height: 52, display: "flex", alignItems: "center", gap: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 9, marginRight: "auto" }}>
-            <div style={{ width: 24, height: 24, borderRadius: "50%", background: "conic-gradient(from 0deg,hsl(0,80%,60%),hsl(60,80%,60%),hsl(120,80%,60%),hsl(180,80%,60%),hsl(240,80%,60%),hsl(300,80%,60%),hsl(360,80%,60%))", boxShadow: "0 0 12px rgba(181,123,238,.35)", flexShrink: 0 }} />
-            <span style={{ fontFamily: "var(--serif)", fontSize: 16 }}>Color Theory</span>
-          </div>
-          <div style={{ display: "flex", gap: 1, alignItems: "center" }}>
-            {CHAPTERS.map(c => {
-              const active = chapter === c.id;
-              return (
-                <button key={c.id} onClick={() => goTo(c.id)}
-                  style={{ padding: "5px 10px", borderRadius: 6, fontSize: 12, background: active ? "var(--as)" : "transparent", color: active ? "var(--ac)" : "var(--td)", borderBottom: active ? "2px solid var(--ac)" : "2px solid transparent", transition: "all .12s", fontWeight: active ? 500 : 400, display: "flex", alignItems: "center", gap: 5 }}>
-                  <span>{c.icon}</span>
-                  <span>{c.short}</span>
-                </button>
-              );
-            })}
-          </div>
-          <button onClick={() => setLight(l => !l)}
-            style={{ marginLeft: 14, padding: "5px 11px", borderRadius: 20, fontSize: 11, fontFamily: "var(--mono)", background: "var(--sf)", border: "1px solid var(--bd)", color: "var(--td)" }}>
-            {light ? "🌙" : "☀️"}
-          </button>
-        </div>
-        <div style={{ height: 2, background: "var(--bd)" }}>
-          <div style={{ width: `${((curIdx + 1) / CHAPTERS.length) * 100}%`, height: "100%", background: "linear-gradient(to right,var(--ac),#e8a0d4)", transition: "width .35s", borderRadius: 1 }} />
-        </div>
-      </nav>
 
       {/* ── HERO ── */}
       <header style={{ maxWidth: 1160, margin: "0 auto", padding: "72px 28px 52px", borderBottom: "1px solid var(--bd)" }}>
@@ -1064,7 +1038,7 @@ export default function App() {
       <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 28px", display: "grid", gridTemplateColumns: "188px 1fr", gap: 48, paddingTop: 40, paddingBottom: 100, alignItems: "start" }}>
 
         {/* Sidebar */}
-        <aside style={{ position: "sticky", top: 70 }}>
+        <aside style={{ position: "sticky", top: 20 }}>
           <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--tm)", marginBottom: 10, letterSpacing: ".06em" }}>CHAPTERS</p>
           <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {CHAPTERS.map(c => {
@@ -1162,6 +1136,17 @@ export default function App() {
         </p>
         <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--tm)", marginTop: 4 }}>// theme inspired by kevalya-portfolio.vercel.app</p>
       </footer>
+
+      {/* ── BACK TO TOP ── */}
+      {showTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          style={{ position: "fixed", bottom: 32, right: 32, zIndex: 300, width: 44, height: 44, borderRadius: "50%", background: "var(--ac)", border: "none", color: "#fff", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(181,123,238,.45)", cursor: "pointer", transition: "opacity .2s,transform .2s", animation: "pop .18s ease both" }}
+          title="Back to top"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 }

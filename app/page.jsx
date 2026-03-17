@@ -1001,7 +1001,7 @@ export default function App() {
     return () => document.head.removeChild(el);
   }, []);
 
-  const goTo = id => { setChapter(id); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const goTo = id => { setChapter(id); };
   const curIdx = CHAPTERS.findIndex(c => c.id === chapter);
   const cur = CHAPTERS[curIdx];
   const prev = CHAPTERS[curIdx - 1];

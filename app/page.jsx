@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
 "use client";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 /* ─────────────────────────────────────────────────────────────────
    COLOR THEORY — Interactive Learning Experience
    Deploy: add to pages/index.jsx or app/page.jsx in a Next.js project
